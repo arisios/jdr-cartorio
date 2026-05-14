@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import Home from './pages/Home';
@@ -19,10 +19,11 @@ function AdminRoute({ children }) {
 
 function AppContent() {
   const [resultado, setResultado] = useState(null);
+  const navigate = useNavigate();
   return (
     <Routes>
       <Route path="/" element={resultado ? <Resultado data={resultado} onNew={() => setResultado(null)}/> : <Home/>}/>
-      <Route path="/registrar" element={<Fluxo onSuccess={(data) => { setResultado(data); window.history.pushState({}, '', '/'); }}/>}/>
+      <Route path="/registrar" element={<Fluxo onSuccess={(data) => { setResultado(data); navigate('/'); }}/>}/>
       <Route path="/c/:token" element={<SharedCertidao/>}/>
       <Route path="/admin/login" element={<AuthPage/>}/>
       <Route path="/admin" element={<AdminRoute><AdminPanel/></AdminRoute>}/>

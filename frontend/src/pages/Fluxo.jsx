@@ -49,10 +49,10 @@ export default function Fluxo({ onSuccess }) {
       if (assinatura) fd.append('assinatura', assinatura);
 
       const { data } = await api.post('/certidoes', fd, {
-        headers: { 'Content-Type': 'multipart/form-data' },
         onUploadProgress: e => setProgresso(Math.round(e.loaded / e.total * 100)),
       });
       onSuccess(data);
+      navigate('/');
     } catch (err) {
       toast.error(err.response?.data?.error || 'Erro ao gerar certidão');
     } finally { setEnviando(false); setProgresso(0); }
