@@ -55,6 +55,7 @@ export default function Fluxo({ onSuccess }) {
         onUploadProgress: e => setProgresso(Math.round(e.loaded / e.total * 100)),
       });
       onSuccess(data);
+      toast('🪙 Moedas adicionadas à sua carteira!', { icon: '🪙', duration: 3000 });
       navigate('/');
     } catch (err) {
       toast.error(err.response?.data?.error || 'Erro ao gerar certidão');
