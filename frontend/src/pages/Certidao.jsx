@@ -8,7 +8,7 @@ const formatDate = (dateStr) => {
 };
 
 export default function Certidao({ certidao }) {
-  const { tipo, nome1, nome2, foto1_path, foto2_path, texto_usado, assinatura, carimbo, event_name, created_at } = certidao;
+  const { tipo, nome1, nome2, foto1_path, foto2_path, texto_usado, assinatura, assinatura2, carimbo, event_name, created_at } = certidao;
   const tipoLabel = TIPO_LABEL[tipo] || tipo;
   const tipoEmoji = TIPO_EMOJI[tipo] || '💍';
 
@@ -79,17 +79,24 @@ export default function Certidao({ certidao }) {
         </p>
       </div>
 
-      {/* Data e assinatura */}
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:14, position:'relative', zIndex:1, gap:16 }}>
+      {/* Data e assinaturas */}
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:14, position:'relative', zIndex:1, gap:8 }}>
         <div style={{ flex:1 }}>
           <div style={{ fontSize:9, color:'#C79A3B', letterSpacing:'0.1em', textTransform:'uppercase', fontFamily:'"DM Sans",sans-serif', marginBottom:3 }}>Data</div>
-          <div style={{ fontSize:12, color:'#3A1F14', fontStyle:'italic' }}>{formatDate(created_at)}</div>
+          <div style={{ fontSize:11, color:'#3A1F14', fontStyle:'italic' }}>{formatDate(created_at)}</div>
         </div>
-        <div style={{ flex:2, textAlign:'center' }}>
-          <div style={{ fontSize:9, color:'#C79A3B', letterSpacing:'0.1em', textTransform:'uppercase', fontFamily:'"DM Sans",sans-serif', marginBottom:3 }}>Assinatura</div>
+        <div style={{ flex:1.5, textAlign:'center' }}>
+          <div style={{ fontSize:8, color:'#C79A3B', letterSpacing:'0.08em', textTransform:'uppercase', fontFamily:'"DM Sans",sans-serif', marginBottom:2 }}>{nome1}</div>
           {assinatura
-            ? <img src={assinatura} alt="assinatura" style={{ height:48, maxWidth:'100%', objectFit:'contain' }} crossOrigin="anonymous"/>
-            : <div style={{ borderBottom:'1px solid rgba(58,31,20,0.3)', height:48 }}/>
+            ? <img src={assinatura} alt="assinatura" style={{ height:40, maxWidth:'100%', objectFit:'contain' }} crossOrigin="anonymous"/>
+            : <div style={{ borderBottom:'1px solid rgba(58,31,20,0.25)', height:40 }}/>
+          }
+        </div>
+        <div style={{ flex:1.5, textAlign:'center' }}>
+          <div style={{ fontSize:8, color:'#C79A3B', letterSpacing:'0.08em', textTransform:'uppercase', fontFamily:'"DM Sans",sans-serif', marginBottom:2 }}>{nome2}</div>
+          {assinatura2
+            ? <img src={assinatura2} alt="assinatura2" style={{ height:40, maxWidth:'100%', objectFit:'contain' }} crossOrigin="anonymous"/>
+            : <div style={{ borderBottom:'1px solid rgba(58,31,20,0.25)', height:40 }}/>
           }
         </div>
       </div>

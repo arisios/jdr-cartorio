@@ -21,6 +21,7 @@ export default function Fluxo({ onSuccess }) {
   const [foto1Preview, setFoto1Preview] = useState(null);
   const [foto2Preview, setFoto2Preview] = useState(null);
   const [assinatura, setAssinatura] = useState(null);
+  const [assinatura2, setAssinatura2] = useState(null);
   const [enviando, setEnviando] = useState(false);
   const [progresso, setProgresso] = useState(0);
   const foto1Ref = useRef();
@@ -47,6 +48,7 @@ export default function Fluxo({ onSuccess }) {
       if (foto1) fd.append('foto1', foto1);
       if (foto2) fd.append('foto2', foto2);
       if (assinatura) fd.append('assinatura', assinatura);
+      if (assinatura2) fd.append('assinatura2', assinatura2);
 
       const { data } = await api.post('/certidoes', fd, {
         onUploadProgress: e => setProgresso(Math.round(e.loaded / e.total * 100)),
@@ -142,15 +144,37 @@ export default function Fluxo({ onSuccess }) {
             </div>
           )}
 
-          {/* STEP 3 — Assinatura */}
+          {/* STEP 3 — Assinaturas */}
           {step === 3 && (
             <div>
               <button onClick={() => setStep(2)} className="text-sm mb-5 flex items-center gap-1" style={{color:'#C79A3B'}}>← Voltar</button>
-              <h2 className="font-display text-2xl font-bold mb-1 text-center" style={{color:'#4B1E6D'}}>Assinar o documento</h2>
-              <p className="text-sm text-center mb-5" style={{color:'rgba(58,31,20,0.5)'}}>Use o dedo ou mouse para assinar</p>
-              <div className="card-junina p-4 mb-5">
-                <SignaturePad onChange={setAssinatura}/>
+              <h2 className="font-display text-2xl font-bold mb-1 text-center" style={{color:'#4B1E6D'}}>Assinaturas</h2>
+              <p className="text-sm text-center mb-5" style={{color:'rgba(58,31,20,0.5)'}}>Cada parte assina o documento</p>
+
+              {/* Assinatura 1 */}
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{background:'linear-gradient(135deg,#C21874,#6F2DA8)'}}>1</div>
+                  <p className="text-sm font-semibold" style={{color:'#4B1E6D'}}>{nome1}</p>
+                  {assinatura && <span className="ml-auto text-xs font-bold" style={{color:'#007C91'}}>✓ Assinado</span>}
+                </div>
+                <div className="card-junina p-3">
+                  <SignaturePad onChange={setAssinatura} key="sig1"/>
+                </div>
               </div>
+
+              {/* Assinatura 2 */}
+              <div className="mb-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{background:'linear-gradient(135deg,#6F2DA8,#007C91)'}}>2</div>
+                  <p className="text-sm font-semibold" style={{color:'#4B1E6D'}}>{nome2}</p>
+                  {assinatura2 && <span className="ml-auto text-xs font-bold" style={{color:'#007C91'}}>✓ Assinado</span>}
+                </div>
+                <div className="card-junina p-3">
+                  <SignaturePad onChange={setAssinatura2} key="sig2"/>
+                </div>
+              </div>
+
               {enviando && (
                 <div className="mb-4">
                   <div className="flex justify-between text-xs mb-1" style={{color:'#6F2DA8'}}>
@@ -164,8 +188,8 @@ export default function Fluxo({ onSuccess }) {
               <button className="btn-primary text-lg py-4 mb-2" onClick={handleEnviar} disabled={enviando}>
                 {enviando ? <span className="flex items-center justify-center gap-2"><LoadingSpinner size="sm"/> Gerando...</span> : '💍 Gerar Certidão Oficial!'}
               </button>
-              <button className="btn-secondary w-full text-sm" onClick={handleEnviar} disabled={enviando||!!assinatura}>
-                Gerar sem assinatura
+              <button className="btn-secondary w-full text-sm" onClick={handleEnviar} disabled={enviando || !!assinatura || !!assinatura2}>
+                Gerar sem assinaturas
               </button>
             </div>
           )}

@@ -81,6 +81,7 @@ function initDb() {
       texto_id INTEGER,
       texto_usado TEXT NOT NULL,
       assinatura TEXT,
+      assinatura2 TEXT,
       carimbo TEXT NOT NULL,
       cert_token TEXT UNIQUE NOT NULL,
       event_name TEXT DEFAULT 'Juninas 2026',
@@ -95,6 +96,7 @@ function initDb() {
     console.log('✅ 28 textos oficiais criados');
   }
 
+  try { db.exec(`ALTER TABLE certidoes ADD COLUMN assinatura2 TEXT`); } catch {}
   require('../../../../shared/users-db').getUsersDb();
   console.log('✅ Banco Cartório Junino inicializado');
   return db;

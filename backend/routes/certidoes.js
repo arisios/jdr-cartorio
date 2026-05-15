@@ -39,7 +39,7 @@ router.get('/tipos', (req, res) => {
 });
 
 router.post('/', upload.fields([{ name: 'foto1', maxCount: 1 }, { name: 'foto2', maxCount: 1 }]), (req, res) => {
-  const { tipo, nome1, nome2, assinatura, event_name } = req.body;
+  const { tipo, nome1, nome2, assinatura, assinatura2, event_name } = req.body;
 
   if (!tipo || !TIPOS_VALIDOS.includes(tipo)) return res.status(400).json({ error: 'Tipo de união inválido' });
   if (!nome1?.trim() || !nome2?.trim()) return res.status(400).json({ error: 'Informe os dois nomes' });
@@ -55,9 +55,9 @@ router.post('/', upload.fields([{ name: 'foto1', maxCount: 1 }, { name: 'foto2',
 
   const db = getDb();
   const result = db.prepare(`
-    INSERT INTO certidoes (tipo, nome1, nome2, foto1_path, foto2_path, texto_id, texto_usado, assinatura, carimbo, cert_token, event_name)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `).run(tipo, nome1.trim(), nome2.trim(), foto1_path, foto2_path, texto.id, texto.texto, assinatura || null, carimbo, cert_token, event_name || 'Juninas 2026');
+    INSERT INTO certidoes (tipo, nome1, nome2, foto1_path, foto2_path, texto_id, texto_usado, assinatura, assinatura2, carimbo, cert_token, event_name)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(tipo, nome1.trim(), nome2.trim(), foto1_path, foto2_path, texto.id, texto.texto, assinatura || null, assinatura2 || null, carimbo, cert_token, event_name || 'Juninas 2026');
 
   const certidao = db.prepare('SELECT * FROM certidoes WHERE id=?').get(result.lastInsertRowid);
   res.status(201).json({ certidao, cert_token, share_url: `/c/${cert_token}` });
