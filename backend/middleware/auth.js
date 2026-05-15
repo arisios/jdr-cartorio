@@ -15,4 +15,12 @@ function adminMiddleware(req, res, next) {
   });
 }
 
-module.exports = { JWT_SECRET, authMiddleware, adminMiddleware };
+function optionalAuth(req, res, next) {
+  const auth = req.headers.authorization;
+  if (auth?.startsWith('Bearer ')) {
+    try { req.user = jwt.verify(auth.slice(7), JWT_SECRET); } catch {}
+  }
+  next();
+}
+
+module.exports = { JWT_SECRET, authMiddleware, adminMiddleware, optionalAuth };

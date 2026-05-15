@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { getDb, randomCarimbo, randomTexto } = require('../database/db');
+const { emitirMoedas } = require('../../../../shared/wallet-emit');
 const router = express.Router();
 
 const UPLOADS_DIR = path.join(__dirname, '../uploads');
@@ -38,7 +39,8 @@ router.get('/tipos', (req, res) => {
   ]});
 });
 
-router.post('/', upload.fields([{ name: 'foto1', maxCount: 1 }, { name: 'foto2', maxCount: 1 }]), (req, res) => {
+const { optionalAuth } = require('../middleware/auth');
+router.post('/', optionalAuth, upload.fields([{ name: 'foto1', maxCount: 1 }, { name: 'foto2', maxCount: 1 }]), (req, res) => {
   const { tipo, nome1, nome2, assinatura, assinatura2, event_name } = req.body;
 
   if (!tipo || !TIPOS_VALIDOS.includes(tipo)) return res.status(400).json({ error: 'Tipo de união inválido' });
@@ -60,6 +62,10 @@ router.post('/', upload.fields([{ name: 'foto1', maxCount: 1 }, { name: 'foto2',
   `).run(tipo, nome1.trim(), nome2.trim(), foto1_path, foto2_path, texto.id, texto.texto, assinatura || null, assinatura2 || null, carimbo, cert_token, event_name || 'Juninas 2026');
 
   const certidao = db.prepare('SELECT * FROM certidoes WHERE id=?').get(result.lastInsertRowid);
+
+  // Emitir moedas para o usuário logado (se houver)
+  if (req.user?.id) emitirMoedas(req.user.id, 'certidao');
+
   res.status(201).json({ certidao, cert_token, share_url: `/c/${cert_token}` });
 });
 
