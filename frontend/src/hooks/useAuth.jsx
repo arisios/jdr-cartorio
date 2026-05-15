@@ -17,7 +17,8 @@ export function AuthProvider({ children }) {
     setUser(data.user);
     return data.user;
   };
+  const register = async (payload) => { const { data } = await api.post('/auth/register', payload); localStorage.setItem('cj_token', data.token); localStorage.setItem('cj_user', JSON.stringify(data.user)); setUser(data.user); return data.user; };
   const logout = () => { localStorage.removeItem('cj_token'); localStorage.removeItem('cj_user'); setUser(null); };
-  return <AuthContext.Provider value={{ user, loading, login, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, loading, login, register, logout }}>{children}</AuthContext.Provider>;
 }
 export const useAuth = () => useContext(AuthContext);
