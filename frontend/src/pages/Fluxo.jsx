@@ -7,6 +7,7 @@ import { TIPOS } from '../utils/textos';
 import Bandeirinhas from '../components/Bandeirinhas';
 import LoadingSpinner from '../components/LoadingSpinner';
 import SignaturePad from '../components/SignaturePad';
+import WalletBadge from '../components/WalletBadge';
 
 const STEPS = ['tipo','nomes','fotos','assinatura'];
 
@@ -63,6 +64,7 @@ export default function Fluxo({ onSuccess }) {
   return (
     <div className="min-h-screen bg-junina flex flex-col">
       <Bandeirinhas />
+      <div className="flex justify-end px-4 pt-2"><WalletBadge /></div>
 
       {/* Progresso */}
       <div className="px-4 pt-3">

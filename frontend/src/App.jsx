@@ -13,7 +13,14 @@ import LoadingSpinner from './components/LoadingSpinner';
 function AdminRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="min-h-screen bg-junina flex items-center justify-center"><LoadingSpinner size="lg"/></div>;
-  if (!user || user.role !== 'admin') return <Navigate to="/admin/login" replace/>;
+  if (!user || user.role !== 'admin') return <Navigate to="/login" replace/>;
+  return children;
+}
+
+function PrivateRoute({ children }) {
+  const { user, loading } = useAuth();
+  if (loading) return <div className="min-h-screen bg-junina flex items-center justify-center"><LoadingSpinner size="lg"/></div>;
+  if (!user) return <Navigate to="/login" replace/>;
   return children;
 }
 
@@ -22,10 +29,11 @@ function AppContent() {
   const navigate = useNavigate();
   return (
     <Routes>
-      <Route path="/" element={resultado ? <Resultado data={resultado} onNew={() => setResultado(null)}/> : <Home/>}/>
-      <Route path="/registrar" element={<Fluxo onSuccess={(data) => { setResultado(data); navigate('/'); }}/>}/>
+      <Route path="/" element={resultado ? <Resultado data={resultado} onNew={() => setResultado(null)}/> : <PrivateRoute><Home/></PrivateRoute>}/>
+      <Route path="/registrar" element={<PrivateRoute><Fluxo onSuccess={(data) => { setResultado(data); navigate('/'); }}/></PrivateRoute>}/>
       <Route path="/c/:token" element={<SharedCertidao/>}/>
-      <Route path="/admin/login" element={<AuthPage/>}/>
+      <Route path="/login" element={<AuthPage/>}/>
+      <Route path="/admin/login" element={<Navigate to="/login" replace/>}/>
       <Route path="/admin" element={<AdminRoute><AdminPanel/></AdminRoute>}/>
       <Route path="*" element={<Navigate to="/" replace/>}/>
     </Routes>
